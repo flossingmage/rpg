@@ -1,4 +1,4 @@
-package game.Level;
+package game.level;
 
 import java.awt.image.BufferedImage;
 

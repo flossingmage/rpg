@@ -1,7 +1,7 @@
-package game.player;
+package game.entities.player;
 
 import game.GamePanel;
-import game.Level.MapLoader;
+import game.level.MapLoader;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -15,6 +15,10 @@ public class Player {
     int x, y, vx, vy;
     int speed = 2;
     int playerDimension = 30;
+
+    boolean isAttacking = false;
+
+    int tick = 0;
 
     BufferedImage playerIdl;
 
@@ -40,10 +44,12 @@ public class Player {
     public void playerMove() {
         int x;
         int y;
+
         int left = ((this.x + vx) - ((this.x + vx) % GamePanel.tileDimensions)) / GamePanel.tileDimensions;
         int up = ((this.y + vy) - ((this.y + vy) % GamePanel.tileDimensions)) / GamePanel.tileDimensions;
         int down = ((this.y + playerDimension + vy) - ((this.y + playerDimension + vy) % GamePanel.tileDimensions)) / GamePanel.tileDimensions;
         int right = ((this.x + playerDimension + vx) - ((this.x + playerDimension + vx) % GamePanel.tileDimensions)) / GamePanel.tileDimensions;
+
         if (vx < 0) {
             x = left;
         } else if (vx > 0) {
@@ -56,6 +62,7 @@ public class Player {
         } else {
             y = down;
         }
+
         if ((MapLoader.getMap().containsKey(left + " " + y) && MapLoader.getMap().containsKey(right + " " + y)) && (MapLoader.getMap().get(left + " " + y).walkable) && (MapLoader.getMap().get(right + " " + y).walkable)) {
             this.y += vy;
         }
@@ -78,8 +85,20 @@ public class Player {
         }
     }
 
+    public void attack(){
+        isAttacking = true;
+    }
+
     public void draw(Graphics2D g2d) {
-        g2d.setColor(Color.green);
+        g2d.setColor(Color.red);
         g2d.drawImage(playerIdl, x, y, 32, 32, null);
+        if (isAttacking){
+            tick++;
+            if (tick == 120){
+                isAttacking = false;
+                tick = 0;
+            }
+            g2d.drawRect((x + playerDimension),(y + playerDimension/2), 30,10);
+        }
     }
 }

@@ -1,8 +1,9 @@
 package game;
 
-import game.Level.MapLoader;
-import game.player.KeyHandler;
-import game.player.Player;
+import game.level.MapLoader;
+import game.entities.player.KeyHandler;
+import game.entities.player.MouseHandler;
+import game.entities.player.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,6 +29,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
         this.addKeyListener(new KeyHandler(player));
+        this.addMouseListener(new MouseHandler(player));
         this.setDoubleBuffered(true);
         this.setFocusable(true);
         MapLoader.loadMap("1");
