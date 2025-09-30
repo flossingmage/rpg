@@ -6,7 +6,7 @@ public class Entity {
     protected int x;
     protected int y;
 
-    public Entity(int x, int y){
+    public Entity(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -14,7 +14,7 @@ public class Entity {
     public boolean entityCollision(String direction) {
         for (int two = -GamePanel.tileDimensions; two < GamePanel.tileDimensions; two++) {
             for (int one = 0; one < GamePanel.tileDimensions + 1; one++) {
-                switch (direction){
+                switch (direction) {
                     case "up" -> {
                         if (EntityLoader.enemies.containsKey(((x + two) + " " + (y - one)))) return false;
                     }

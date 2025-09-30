@@ -25,7 +25,6 @@ public class Player extends Entity {
     BufferedImage playerIdl;
 
     public Player() {
-
         super(100, 100);
         try {
             playerIdl = ImageIO.read(new File("res/player/playerIdl.png"));
@@ -68,15 +67,15 @@ public class Player extends Entity {
             String direction;
             if (vy < 0) {
                 direction = "up";
-            }else{
+            } else {
                 direction = "down";
             }
-            if (entityCollision(direction) && ( MapLoader.getMap().containsKey(left + " " + y) && MapLoader.getMap().containsKey(right + " " + y)) && (MapLoader.getMap().get(left + " " + y).walkable) && (MapLoader.getMap().get(right + " " + y).walkable)) {
+            if (entityCollision(direction) && (MapLoader.getMap().containsKey(left + " " + y) && MapLoader.getMap().containsKey(right + " " + y)) && (MapLoader.getMap().get(left + " " + y).walkable) && (MapLoader.getMap().get(right + " " + y).walkable)) {
                 this.y += vy;
             }
             if (vx < 0) {
                 direction = "left";
-            }else{
+            } else {
                 direction = "right";
             }
             if (entityCollision(direction) && (MapLoader.getMap().containsKey(x + " " + up) && MapLoader.getMap().containsKey(x + " " + down)) && (MapLoader.getMap().get(x + " " + up).walkable) && (MapLoader.getMap().get(x + " " + down).walkable)) {
