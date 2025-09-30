@@ -26,7 +26,6 @@ public class MapLoader {
         }
     }
 
-    ;
     static Tile water;
     static Tile sand;
     static Tile dirt_road;
@@ -34,15 +33,12 @@ public class MapLoader {
     static HashMap<String, Tile> map = new HashMap<>();
     static ArrayList<String[]> exits = new ArrayList<>();
 
-    public MapLoader() {
-    }
-
     public static void loadMap(String MapName) {
         map.clear();
         exits.clear();
 
         try {
-            Scanner scan = new Scanner(new File("res/level/levels/" + MapName));
+            Scanner scan = new Scanner(new File("res/level/levels/" + MapName + "/map"));
 
             int y = 0;
             for (int loop = 0; loop < 20; loop++) {
@@ -77,7 +73,7 @@ public class MapLoader {
         }
     }
 
-    public void drawMap(Graphics2D g2d) {
+    public static void drawMap(Graphics2D g2d) {
         for (int x = 0; x < GamePanel.columns; x++) {
             for (int y = 0; y < GamePanel.rows; y++)
                 try {

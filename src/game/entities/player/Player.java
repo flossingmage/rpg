@@ -1,6 +1,8 @@
 package game.entities.player;
 
 import game.GamePanel;
+import game.entities.Entity;
+import game.entities.EntityLoader;
 import game.level.MapLoader;
 
 import javax.imageio.ImageIO;
@@ -10,9 +12,9 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class Player {
+public class Player extends Entity {
 
-    int x, y, vx, vy;
+    int vx, vy;
     int speed = 2;
     int playerDimension = 30;
 
@@ -23,8 +25,8 @@ public class Player {
     BufferedImage playerIdl;
 
     public Player() {
-        this.x = 100;
-        this.y = 100;
+
+        super(100, 100);
         try {
             playerIdl = ImageIO.read(new File("res/player/playerIdl.png"));
         } catch (IOException e) {
@@ -62,13 +64,26 @@ public class Player {
         } else {
             y = down;
         }
+        if (!isAttacking) {
+            String direction;
+            if (vy < 0) {
+                direction = "up";
+            }else{
+                direction = "down";
+            }
+            if (entityCollision(direction) && ( MapLoader.getMap().containsKey(left + " " + y) && MapLoader.getMap().containsKey(right + " " + y)) && (MapLoader.getMap().get(left + " " + y).walkable) && (MapLoader.getMap().get(right + " " + y).walkable)) {
+                this.y += vy;
+            }
+            if (vx < 0) {
+                direction = "left";
+            }else{
+                direction = "right";
+            }
+            if (entityCollision(direction) && (MapLoader.getMap().containsKey(x + " " + up) && MapLoader.getMap().containsKey(x + " " + down)) && (MapLoader.getMap().get(x + " " + up).walkable) && (MapLoader.getMap().get(x + " " + down).walkable)) {
+                this.x += vx;
+            }
+        }
 
-        if ((MapLoader.getMap().containsKey(left + " " + y) && MapLoader.getMap().containsKey(right + " " + y)) && (MapLoader.getMap().get(left + " " + y).walkable) && (MapLoader.getMap().get(right + " " + y).walkable)) {
-            this.y += vy;
-        }
-        if ((MapLoader.getMap().containsKey(x + " " + up) && MapLoader.getMap().containsKey(x + " " + down)) && (MapLoader.getMap().get(x + " " + up).walkable) && (MapLoader.getMap().get(x + " " + down).walkable)) {
-            this.x += vx;
-        }
 
         changeMap(x, y);
     }
@@ -78,6 +93,7 @@ public class Player {
             if (Integer.parseInt(exit[0]) == x && Integer.parseInt(exit[1]) == y) {
                 System.out.println("change map to " + exit[2]);
                 MapLoader.loadMap(exit[2]);
+                EntityLoader.loadEntities(exit[2]);
                 this.x = Integer.parseInt(exit[3]) * GamePanel.tileDimensions;
                 this.y = Integer.parseInt(exit[4]) * GamePanel.tileDimensions;
                 break;
@@ -85,20 +101,20 @@ public class Player {
         }
     }
 
-    public void attack(){
+    public void attack() {
         isAttacking = true;
     }
 
     public void draw(Graphics2D g2d) {
         g2d.setColor(Color.red);
         g2d.drawImage(playerIdl, x, y, 32, 32, null);
-        if (isAttacking){
+        if (isAttacking) {
             tick++;
-            if (tick == 120){
+            if (tick == 60) {
                 isAttacking = false;
                 tick = 0;
             }
-            g2d.drawRect((x + playerDimension),(y + playerDimension/2), 30,10);
+            g2d.drawRect((x + playerDimension), (y + playerDimension / 2), 30, 10);
         }
     }
 }

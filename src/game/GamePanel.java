@@ -1,5 +1,6 @@
 package game;
 
+import game.entities.EntityLoader;
 import game.level.MapLoader;
 import game.entities.player.KeyHandler;
 import game.entities.player.MouseHandler;
@@ -19,11 +20,11 @@ public class GamePanel extends JPanel implements Runnable {
     int screenWidth = tileDimensions * columns;
     int screenHeight = tileDimensions * rows;
 
-    MapLoader mapLoader = new MapLoader();
     Player player = new Player();
     Thread gameThread;
 
     int FPSLimit = 60;
+
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -33,6 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.setFocusable(true);
         MapLoader.loadMap("1");
+        EntityLoader.loadEntities("1");
     }
 
     public void startThreads() {
@@ -58,7 +60,8 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        mapLoader.drawMap(g2d);
+        MapLoader.drawMap(g2d);
+        EntityLoader.drawEntities(g2d);
         player.draw(g2d);
     }
 
