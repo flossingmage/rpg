@@ -13,4 +13,8 @@ public class Enemy extends Entity {
     public void draw(Graphics2D g2d) {
 
     }
+
+    public void attacked(){
+        System.out.println("attacked");
+    }
 }

@@ -2,9 +2,12 @@ package game.entities;
 
 import game.GamePanel;
 
+import java.util.ArrayList;
+
 public class Entity {
     protected int x;
     protected int y;
+    protected int collisionBuffer = 6;
 
     public Entity(int x, int y) {
         this.x = x;
@@ -12,24 +15,37 @@ public class Entity {
     }
 
     public boolean entityCollision(String direction) {
-        for (int two = -GamePanel.tileDimensions; two < GamePanel.tileDimensions; two++) {
-            for (int one = 0; one < GamePanel.tileDimensions + 1; one++) {
-                switch (direction) {
-                    case "up" -> {
-                        if (EntityLoader.enemies.containsKey(((x + two) + " " + (y - one)))) return false;
-                    }
-                    case "down" -> {
-                        if (EntityLoader.enemies.containsKey(((x + two) + " " + (y + one)))) return false;
-                    }
-                    case "left" -> {
-                        if (EntityLoader.enemies.containsKey(((x - one) + " " + (y + two)))) return false;
-                    }
-                    case "right" -> {
-                        if (EntityLoader.enemies.containsKey(((x + one) + " " + (y + two)))) return false;
-                    }
-                }
+        switch (direction) {
+            case "up" -> {
+                if (!entitiesInArea(x - GamePanel.tileDimensions + collisionBuffer, y - GamePanel.tileDimensions, GamePanel.tileDimensions , 2 * GamePanel.tileDimensions - collisionBuffer - 2).isEmpty())
+                    return false;
+            }
+            case "down" -> {
+                if (!entitiesInArea(x - GamePanel.tileDimensions + collisionBuffer, y, GamePanel.tileDimensions , 2 * GamePanel.tileDimensions - collisionBuffer - 2).isEmpty())
+                    return false;
+            }
+            case "left" -> {
+                if (!entitiesInArea(x - GamePanel.tileDimensions, y - GamePanel.tileDimensions + collisionBuffer, 2 * GamePanel.tileDimensions - collisionBuffer - 2, GamePanel.tileDimensions ).isEmpty())
+                    return false;
+            }
+            case "right" -> {
+                if (!entitiesInArea(x, y - GamePanel.tileDimensions + collisionBuffer, 2 * GamePanel.tileDimensions - collisionBuffer - 2, GamePanel.tileDimensions).isEmpty())
+                    return false;
             }
         }
         return true;
     }
+
+    public ArrayList<Entity> entitiesInArea(int x, int y, int height, int length) {
+        ArrayList<Entity> entities = new ArrayList<>();
+
+        for (int loopx = x; loopx < x + length; loopx++) {
+            for (int loopy = y; loopy < y + height; loopy++) {
+                if (EntityLoader.enemies.containsKey(loopx + " " + loopy))
+                    entities.add(EntityLoader.enemies.get(loopx + " " + loopy));
+            }
+        }
+        return entities;
+    }
+
 }

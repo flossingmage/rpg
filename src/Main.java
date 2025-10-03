@@ -2,18 +2,21 @@ import game.GamePanel;
 
 import javax.swing.*;
 
-void main() {
+public class Main {
 
-    JFrame screen = new JFrame("window");
-    screen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public static void main(String[] args) {
 
-    GamePanel game = new GamePanel();
-    screen.add(game);
+        JFrame screen = new JFrame("window");
+        screen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    screen.pack();
-    screen.setResizable(false);
-    screen.setVisible(true);
+        GamePanel game = new GamePanel();
+        screen.add(game);
 
-    game.startThreads();
-    game.run();
+        screen.pack();
+        screen.setResizable(false);
+        screen.setVisible(true);
+
+        game.startThreads();
+        game.run();
+    }
 }

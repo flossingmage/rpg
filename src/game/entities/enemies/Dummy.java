@@ -25,6 +25,7 @@ public class Dummy extends Enemy {
     }
 
     public void draw(Graphics2D g2d) {
+        g2d.drawRect(x * GamePanel.tileDimensions, y * GamePanel.tileDimensions, GamePanel.tileDimensions, GamePanel.tileDimensions);
         g2d.drawImage(idl, x * GamePanel.tileDimensions, y * GamePanel.tileDimensions, GamePanel.tileDimensions, GamePanel.tileDimensions, null);
     }
 
