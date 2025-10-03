@@ -14,6 +14,11 @@ public class Entity {
         this.y = y;
     }
 
+    /**
+     * check if entity can move in a given direction
+     * @param direction
+     * @return
+     */
     public boolean entityCollision(String direction) {
         switch (direction) {
             case "up" -> {
@@ -36,6 +41,14 @@ public class Entity {
         return true;
     }
 
+    /**
+     * Returns a list of all entities in a given area
+     * @param x
+     * @param y
+     * @param height
+     * @param length
+     * @return ArrayList<Entity>
+     */
     public ArrayList<Entity> entitiesInArea(int x, int y, int height, int length) {
         ArrayList<Entity> entities = new ArrayList<>();
 

@@ -20,6 +20,7 @@ public class EntityLoader {
                 String[] line = scanner.nextLine().split(" ");
                 enemies.put((Integer.parseInt(line[1]) * GamePanel.tileDimensions) + " " + (Integer.parseInt(line[2]) * GamePanel.tileDimensions), new Dummy(Integer.parseInt(line[1]), Integer.parseInt(line[2])));
             }
+            scanner.close();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

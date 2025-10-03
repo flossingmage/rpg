@@ -19,6 +19,7 @@ public class Player extends Entity {
     int vx, vy;
     int speed = 2;
     int playerDimension = 30;
+    // templeraly arr will change back to string later 
     String[] direction = new String[2];
 
     boolean isAttacking = false;
@@ -27,7 +28,7 @@ public class Player extends Entity {
 
     BufferedImage playerIdl;
 
-    //temp
+    //temp stats will be stored in weapon object later
     int range = 40;
     int attackThickness = 10;
 
@@ -58,10 +59,12 @@ public class Player extends Entity {
         int x;
         int y;
 
+        // determine the tiles the player is on
         int left = ((this.x + vx) - ((this.x + vx) % GamePanel.tileDimensions)) / GamePanel.tileDimensions;
         int up = ((this.y + vy) - ((this.y + vy) % GamePanel.tileDimensions)) / GamePanel.tileDimensions;
         int down = ((this.y + playerDimension + vy) - ((this.y + playerDimension + vy) % GamePanel.tileDimensions)) / GamePanel.tileDimensions;
         int right = ((this.x + playerDimension + vx) - ((this.x + playerDimension + vx) % GamePanel.tileDimensions)) / GamePanel.tileDimensions;
+
 
         if (vx < 0) {
             x = left;
@@ -75,7 +78,9 @@ public class Player extends Entity {
         } else {
             y = down;
         }
+
         if (!isAttacking) {
+            // temp dirrection handler
             if (vy < 0) {
                 direction[0] = "up";
             } else if (vy > 0) {
@@ -118,6 +123,7 @@ public class Player extends Entity {
 
     public void attack() {
         ArrayList<Entity> enemiesAttacked = new ArrayList<>();
+        //will change to switch later
         if (direction[1].equals("null")) {
             if (direction[0].equals("up"))
                 enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions, y - range, attackThickness + GamePanel.tileDimensions, range);
@@ -135,6 +141,7 @@ public class Player extends Entity {
 
 
     public void drawAttack(Graphics2D g2d) {
+        // will change to switch later
         if (direction[1].equals("null")) {
             if (direction[0].equals("up")) g2d.drawRect(x + playerDimension / 2, y - range, attackThickness, range);
             if (direction[0].equals("down")) g2d.drawRect(x + playerDimension / 2, y + playerDimension, attackThickness, range);
