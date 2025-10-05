@@ -25,12 +25,15 @@ public class GamePanel extends JPanel implements Runnable {
 
     int FPSLimit = 60;
 
+    MouseHandler mouseHandler = new MouseHandler(player);
+
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
         this.addKeyListener(new KeyHandler(player));
-        this.addMouseListener(new MouseHandler(player));
+        this.addMouseListener(mouseHandler);
+        this.addMouseMotionListener(mouseHandler);
         this.setDoubleBuffered(true);
         this.setFocusable(true);
         MapLoader.loadMap("1");

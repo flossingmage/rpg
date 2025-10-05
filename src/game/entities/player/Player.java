@@ -19,8 +19,7 @@ public class Player extends Entity {
     int vx, vy;
     int speed = 2;
     int playerDimension = 30;
-    // templeraly arr will change back to string later 
-    String[] direction = new String[2];
+    String direction = "right";
 
     boolean isAttacking = false;
 
@@ -52,12 +51,12 @@ public class Player extends Entity {
 
     public void MouseClicked() {
         isAttacking = true;
-        System.out.println("click");
     }
 
     public void playerMove() {
         int x;
         int y;
+        String moveDirection;
 
         // determine the tiles the player is on
         int left = ((this.x + vx) - ((this.x + vx) % GamePanel.tileDimensions)) / GamePanel.tileDimensions;
@@ -80,33 +79,26 @@ public class Player extends Entity {
         }
 
         if (!isAttacking) {
-            // temp dirrection handler
-            if (vy < 0) {
-                direction[0] = "up";
-            } else if (vy > 0) {
-                direction[0] = "down";
-
+            if (vy <= 0) {
+                moveDirection = "up";
             } else {
-                direction[0] = "null";
-
+                moveDirection = "down";
             }
-            if (vx < 0) {
-                direction[1] = "left";
-            } else if (vx > 0) {
-                direction[1] = "right";
-            } else {
-                direction[1] = "null";
-            }
-
-            if (entityCollision(direction[0]) && (MapLoader.getMap().containsKey(left + " " + y) && MapLoader.getMap().containsKey(right + " " + y)) && (MapLoader.getMap().get(left + " " + y).walkable) && (MapLoader.getMap().get(right + " " + y).walkable))
+            if (entityCollision(moveDirection) && (MapLoader.getMap().containsKey(left + " " + y) && MapLoader.getMap().containsKey(right + " " + y)) && (MapLoader.getMap().get(left + " " + y).walkable) && (MapLoader.getMap().get(right + " " + y).walkable))
                 this.y += vy;
-            if (entityCollision(direction[1]) && (MapLoader.getMap().containsKey(x + " " + up) && MapLoader.getMap().containsKey(x + " " + down)) && (MapLoader.getMap().get(x + " " + up).walkable) && (MapLoader.getMap().get(x + " " + down).walkable))
+
+            if (vx <= 0) {
+                moveDirection = "left";
+            } else {
+                moveDirection = "right";
+            }
+
+            if (entityCollision(moveDirection) && (MapLoader.getMap().containsKey(x + " " + up) && MapLoader.getMap().containsKey(x + " " + down)) && (MapLoader.getMap().get(x + " " + up).walkable) && (MapLoader.getMap().get(x + " " + down).walkable))
                 this.x += vx;
         }
 
         changeMap(x, y);
     }
-
 
     public void changeMap(int x, int y) {
         for (String[] exit : MapLoader.getExits()) {
@@ -123,32 +115,54 @@ public class Player extends Entity {
 
     public void attack() {
         ArrayList<Entity> enemiesAttacked = new ArrayList<>();
-        //will change to switch later
-        if (direction[1].equals("null")) {
-            if (direction[0].equals("up"))
-                enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions, y - range, attackThickness + GamePanel.tileDimensions, range);
-            if (direction[0].equals("down"))
-                enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions, y + playerDimension, attackThickness + GamePanel.tileDimensions, range);
+        switch (direction) {
+            case "up" ->
+                    enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions, y - range, attackThickness + GamePanel.tileDimensions, range);
+            case "down" ->
+                    enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions, y + playerDimension, attackThickness + GamePanel.tileDimensions, range);
+            case "left" ->
+                    enemiesAttacked = entitiesInArea(x - range, y + playerDimension / 2 - GamePanel.tileDimensions, range, attackThickness);
+            case "right" ->
+                    enemiesAttacked = entitiesInArea(x + playerDimension, y + playerDimension / 2 - GamePanel.tileDimensions, range, attackThickness);
+
         }
-        if (direction[1].equals("left"))
-            enemiesAttacked = entitiesInArea(x - range, y + playerDimension / 2 - GamePanel.tileDimensions, range, attackThickness);
-        if (direction[1].equals("right") || (direction[1].equals("null") && direction[0].equals("null")))
-            enemiesAttacked = entitiesInArea(x + playerDimension, y + playerDimension / 2 - GamePanel.tileDimensions, range, attackThickness);
+
         for (Entity entity : enemiesAttacked) {
             if (entity instanceof Enemy) ((Enemy) entity).attacked();
         }
     }
 
+    public void setDirection(int mouseX, int mouseY) {
+        if (!isAttacking) {
+            int relativeX = mouseX - x;
+            int relativeY = mouseY - y;
+            if (relativeX > relativeY) {
+                if (relativeX < -relativeY) {
+                    direction = "up";
+
+                } else {
+                    direction = "right";
+                }
+
+            }
+            if (relativeX < relativeY) {
+                if (relativeX > -relativeY) {
+                    direction = "down";
+
+                } else {
+                    direction = "left";
+                }
+            }
+        }
+    }
 
     public void drawAttack(Graphics2D g2d) {
-        // will change to switch later
-        if (direction[1].equals("null")) {
-            if (direction[0].equals("up")) g2d.drawRect(x + playerDimension / 2, y - range, attackThickness, range);
-            if (direction[0].equals("down")) g2d.drawRect(x + playerDimension / 2, y + playerDimension, attackThickness, range);
+        switch (direction) {
+            case "up" -> g2d.drawRect(x + playerDimension / 2 - attackThickness/2, y - range, attackThickness, range);
+            case "down" -> g2d.drawRect(x + playerDimension / 2  - attackThickness/2, y + playerDimension, attackThickness, range);
+            case "left" -> g2d.drawRect(x - range, y + playerDimension / 2, range, attackThickness);
+            case "right" -> g2d.drawRect(x + playerDimension, y + playerDimension / 2, range, attackThickness);
         }
-        if (direction[1].equals("left")) g2d.drawRect(x - range, y + playerDimension / 2, range, attackThickness);
-        if (direction[1].equals("right") || (direction[1].equals("null") && direction[0].equals("null")))
-            g2d.drawRect(x + playerDimension, y + playerDimension / 2, range, attackThickness);
     }
 
     public void draw(Graphics2D g2d) {
@@ -156,7 +170,7 @@ public class Player extends Entity {
         g2d.drawImage(playerIdl, x + ((Math.abs(playerDimension - GamePanel.tileDimensions)) / 2), y + (Math.abs(playerDimension - GamePanel.tileDimensions) / 2), playerDimension, playerDimension, null);
         if (isAttacking) {
             tick++;
-            if (tick == 60) {
+            if (tick == 30) {
                 isAttacking = false;
                 tick = 0;
             }
