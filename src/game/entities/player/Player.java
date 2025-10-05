@@ -117,13 +117,13 @@ public class Player extends Entity {
         ArrayList<Entity> enemiesAttacked = new ArrayList<>();
         switch (direction) {
             case "up" ->
-                    enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions, y - range, attackThickness + GamePanel.tileDimensions, range);
+                    enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions  - attackThickness / 2, y - range - GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions, range);
             case "down" ->
-                    enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions, y + playerDimension, attackThickness + GamePanel.tileDimensions, range);
+                    enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions  - attackThickness / 2, y + playerDimension, attackThickness + GamePanel.tileDimensions, range);
             case "left" ->
-                    enemiesAttacked = entitiesInArea(x - range, y + playerDimension / 2 - GamePanel.tileDimensions, range, attackThickness);
+                    enemiesAttacked = entitiesInArea(x - range - GamePanel.tileDimensions, y + playerDimension / 2 - GamePanel.tileDimensions , range + GamePanel.tileDimensions, attackThickness  + GamePanel.tileDimensions);
             case "right" ->
-                    enemiesAttacked = entitiesInArea(x + playerDimension, y + playerDimension / 2 - GamePanel.tileDimensions, range, attackThickness);
+                    enemiesAttacked = entitiesInArea(x + playerDimension, y + playerDimension / 2 - GamePanel.tileDimensions, range, attackThickness + GamePanel.tileDimensions);
 
         }
 
@@ -156,17 +156,34 @@ public class Player extends Entity {
         }
     }
 
-    public void drawAttack(Graphics2D g2d) {
+    public void drawAttackHitBox(Graphics2D g2d) {
+        g2d.setColor(Color.blue);
         switch (direction) {
-            case "up" -> g2d.drawRect(x + playerDimension / 2 - attackThickness/2, y - range, attackThickness, range);
-            case "down" -> g2d.drawRect(x + playerDimension / 2  - attackThickness/2, y + playerDimension, attackThickness, range);
+            case "up" ->
+                    g2d.drawRect(x + playerDimension / 2 - GamePanel.tileDimensions  - attackThickness / 2, y - range - GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions, range + GamePanel.tileDimensions);
+            case "down" ->
+                    g2d.drawRect(x + playerDimension / 2 - GamePanel.tileDimensions  - attackThickness / 2, y + playerDimension, attackThickness + GamePanel.tileDimensions, range);
+            case "left" ->
+                    g2d.drawRect(x - range - GamePanel.tileDimensions, y + playerDimension / 2 - GamePanel.tileDimensions, range + GamePanel.tileDimensions, attackThickness  + GamePanel.tileDimensions);
+            case "right" ->
+                    g2d.drawRect(x + playerDimension, y + playerDimension / 2 - GamePanel.tileDimensions, range, attackThickness + GamePanel.tileDimensions);
+
+        }
+
+    }
+
+    public void drawAttack(Graphics2D g2d) {
+        g2d.setColor(Color.red);
+        switch (direction) {
+            case "up" -> g2d.drawRect(x + playerDimension / 2 - attackThickness / 2, y - range, attackThickness, range);
+            case "down" ->
+                    g2d.drawRect(x + playerDimension / 2 - attackThickness / 2, y + playerDimension, attackThickness, range);
             case "left" -> g2d.drawRect(x - range, y + playerDimension / 2, range, attackThickness);
             case "right" -> g2d.drawRect(x + playerDimension, y + playerDimension / 2, range, attackThickness);
         }
     }
 
     public void draw(Graphics2D g2d) {
-        g2d.setColor(Color.red);
         g2d.drawImage(playerIdl, x + ((Math.abs(playerDimension - GamePanel.tileDimensions)) / 2), y + (Math.abs(playerDimension - GamePanel.tileDimensions) / 2), playerDimension, playerDimension, null);
         if (isAttacking) {
             tick++;
@@ -176,6 +193,7 @@ public class Player extends Entity {
             }
             attack();
             drawAttack(g2d);
+         //   drawAttackHitBox(g2d);
         }
     }
 }
