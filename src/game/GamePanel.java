@@ -52,6 +52,7 @@ public class GamePanel extends JPanel implements Runnable {
             player.playerMove();
             repaint();
             try {
+                //noinspection BusyWait
                 sleep(1000 / FPSLimit);
             } catch (InterruptedException e) {
                 e.printStackTrace();
