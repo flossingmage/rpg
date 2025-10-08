@@ -18,8 +18,9 @@ public class MapLoader {
     static {
         try {
             grass = new Tile(ImageIO.read(new File("res/level/tiles/grass.png")), true);
-            water = new Tile(ImageIO.read(new File("res/level/tiles/water.jpg")), false);
+            water = new Tile(ImageIO.read(new File("res/level/tiles/water.png")), false);
             sand = new Tile(ImageIO.read(new File("res/level/tiles/sand.jpg")), true);
+            tree = new Tile(ImageIO.read(new File("res/level/tiles/tree.png")), false);
             dirt_road = new Tile(ImageIO.read(new File("res/level/tiles/Dirt_road.png")), true);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -29,6 +30,7 @@ public class MapLoader {
     static Tile water;
     static Tile sand;
     static Tile dirt_road;
+    static Tile tree;
 
     static HashMap<String, Tile> map = new HashMap<>();
     static ArrayList<String[]> exits = new ArrayList<>();
@@ -57,6 +59,9 @@ public class MapLoader {
                             break;
                         case "3":
                             map.put(x + " " + y, dirt_road);
+                            break;
+                        case "4":
+                            map.put(x + " " + y, tree);
                             break;
                     }
                     x += 1;
