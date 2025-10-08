@@ -1,26 +1,17 @@
 package game.entities.enemies;
 
-import game.GamePanel;
-
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 public class Dummy extends Enemy {
-    BufferedImage idl;
-    BufferedImage hit1;
-    BufferedImage hit2;
+    static BufferedImage idl;
+    static BufferedImage hit1;
+    static BufferedImage hit2;
 
-    BufferedImage drawnImg;
-    int attackedTime = 30;
 
-    boolean isAttacked;
-    int attackedTick = 0;
-
-    public Dummy(int x, int y) {
-        super(x, y);
+    static {
         try {
             idl = ImageIO.read(new File("res/enemies/dummy/dummy0.png"));
             hit1 = ImageIO.read(new File("res/enemies/dummy/dummy1.png"));
@@ -28,32 +19,27 @@ public class Dummy extends Enemy {
         } catch (IOException e) {
             System.out.println("can't load dummy imgs");
         }
-        drawnImg = idl;
+    }
+
+    public Dummy(int x, int y) {
+        super(x, y);
     }
 
     @Override
-    public void attacked() {
-        isAttacked = true;
-    }
-
-    public void draw(Graphics2D g2d) {
-        g2d.drawRect(x * GamePanel.tileDimensions, y * GamePanel.tileDimensions, GamePanel.tileDimensions, GamePanel.tileDimensions);
+    public BufferedImage getDrawnImg() {
         if (isAttacked) {
-            attackedTick++;
-            if (attackedTick == attackedTime) {
-                drawnImg = idl;
+            animationTick++;
+            if (animationTick == animationTime) {
                 isAttacked = false;
-                attackedTick = 0;
-            } else if (attackedTick > (attackedTime / 4) * 3) {
-                drawnImg = hit1;
-            } else if (attackedTick > (attackedTime / 2)) {
-                drawnImg = hit2;
+                animationTick = 0;
+            } else if (animationTick > (animationTime / 4) * 3) {
+                return hit1;
+            } else if (animationTick > (animationTime / 2)) {
+                return hit2;
             } else {
-                drawnImg = hit1;
+                return hit1;
             }
         }
-
-        g2d.drawImage(drawnImg, x * GamePanel.tileDimensions, y * GamePanel.tileDimensions, GamePanel.tileDimensions, GamePanel.tileDimensions, null);
+        return idl;
     }
-
 }

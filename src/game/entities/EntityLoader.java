@@ -3,6 +3,7 @@ package game.entities;
 import game.GamePanel;
 import game.entities.enemies.Dummy;
 import game.entities.enemies.Enemy;
+import game.entities.enemies.Slime;
 
 import java.awt.*;
 import java.io.File;
@@ -18,7 +19,13 @@ public class EntityLoader {
             Scanner scanner = new Scanner(new File("res/level/levels/" + fileName + "/entities"));
             while (scanner.hasNextLine()) {
                 String[] line = scanner.nextLine().split(" ");
-                enemies.put((Integer.parseInt(line[1]) * GamePanel.tileDimensions) + " " + (Integer.parseInt(line[2]) * GamePanel.tileDimensions), new Dummy(Integer.parseInt(line[1]), Integer.parseInt(line[2])));
+                Enemy enemy;
+                switch (line[0]) {
+                    case "Dummy" -> enemy = new Dummy(Integer.parseInt(line[1]), Integer.parseInt(line[2]));
+                    case "Slime" -> enemy = new Slime(Integer.parseInt(line[1]), Integer.parseInt(line[2]));
+                    default -> enemy = new Enemy(Integer.parseInt(line[1]), Integer.parseInt(line[2]));
+                }
+                enemies.put((Integer.parseInt(line[1]) * GamePanel.tileDimensions) + " " + (Integer.parseInt(line[2]) * GamePanel.tileDimensions), enemy);
             }
             scanner.close();
         } catch (Exception e) {

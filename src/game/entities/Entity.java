@@ -2,12 +2,26 @@ package game.entities;
 
 import game.GamePanel;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Entity {
     protected int x;
     protected int y;
     protected int collisionBuffer = 6;
+
+    protected static BufferedImage ErrorImg;
+
+    static {
+        try {
+            ErrorImg = ImageIO.read(new File("res/enemies/error.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public Entity(int x, int y) {
         this.x = x;
