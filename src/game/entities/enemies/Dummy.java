@@ -10,7 +10,6 @@ public class Dummy extends Enemy {
     static BufferedImage hit1;
     static BufferedImage hit2;
 
-
     static {
         try {
             idl = ImageIO.read(new File("res/enemies/dummy/dummy0.png"));
@@ -22,7 +21,7 @@ public class Dummy extends Enemy {
     }
 
     public Dummy(int x, int y) {
-        super(x, y);
+        super(x, y, 8,16);
     }
 
     @Override

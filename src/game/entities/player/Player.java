@@ -18,7 +18,7 @@ public class Player extends Entity {
 
     int vx, vy;
     int speed = 2;
-    int playerDimension = 30;
+    static int playerDimension = 30;
     String direction = "right";
 
     boolean isAttacking = false;
@@ -32,7 +32,7 @@ public class Player extends Entity {
     int attackThickness = 10;
 
     public Player() {
-        super(100, 100);
+        super(100, 100, playerDimension, playerDimension);
         try {
             playerIdl = ImageIO.read(new File("res/player/playerIdl.png"));
         } catch (IOException e) {
@@ -116,12 +116,16 @@ public class Player extends Entity {
     public void attack() {
         ArrayList<Entity> enemiesAttacked = new ArrayList<>();
         switch (direction) {
-            case "up" ->
-                    enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions  - attackThickness / 2, y - range - GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions, range);
+            case "up" -> {
+                enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions - attackThickness / 2, y - range - GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions, range);
+                enemiesAttacked.removeIf(entity -> entity.getHitbox().getY() + entity.getHitbox().getHeight() < y - range);
+            }
             case "down" ->
-                    enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions  - attackThickness / 2, y + playerDimension, attackThickness + GamePanel.tileDimensions, range);
-            case "left" ->
-                    enemiesAttacked = entitiesInArea(x - range - GamePanel.tileDimensions, y + playerDimension / 2 - GamePanel.tileDimensions , range + GamePanel.tileDimensions, attackThickness  + GamePanel.tileDimensions);
+                    enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions - attackThickness / 2, y + playerDimension, attackThickness + GamePanel.tileDimensions, range);
+            case "left" -> {
+                enemiesAttacked = entitiesInArea(x - range - GamePanel.tileDimensions, y + playerDimension / 2 - GamePanel.tileDimensions, range + GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions);
+                enemiesAttacked.removeIf(entity -> entity.getHitbox().getX() + entity.getHitbox().getLength() < x - range);
+            }
             case "right" ->
                     enemiesAttacked = entitiesInArea(x + playerDimension, y + playerDimension / 2 - GamePanel.tileDimensions, range, attackThickness + GamePanel.tileDimensions);
 
@@ -160,11 +164,11 @@ public class Player extends Entity {
         g2d.setColor(Color.blue);
         switch (direction) {
             case "up" ->
-                    g2d.drawRect(x + playerDimension / 2 - GamePanel.tileDimensions  - attackThickness / 2, y - range - GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions, range + GamePanel.tileDimensions);
+                    g2d.drawRect(x + playerDimension / 2 - GamePanel.tileDimensions - attackThickness / 2, y - range - GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions, range + GamePanel.tileDimensions);
             case "down" ->
-                    g2d.drawRect(x + playerDimension / 2 - GamePanel.tileDimensions  - attackThickness / 2, y + playerDimension, attackThickness + GamePanel.tileDimensions, range);
+                    g2d.drawRect(x + playerDimension / 2 - GamePanel.tileDimensions - attackThickness / 2, y + playerDimension, attackThickness + GamePanel.tileDimensions, range);
             case "left" ->
-                    g2d.drawRect(x - range - GamePanel.tileDimensions, y + playerDimension / 2 - GamePanel.tileDimensions, range + GamePanel.tileDimensions, attackThickness  + GamePanel.tileDimensions);
+                    g2d.drawRect(x - range - GamePanel.tileDimensions, y + playerDimension / 2 - GamePanel.tileDimensions, range + GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions);
             case "right" ->
                     g2d.drawRect(x + playerDimension, y + playerDimension / 2 - GamePanel.tileDimensions, range, attackThickness + GamePanel.tileDimensions);
 
@@ -193,7 +197,7 @@ public class Player extends Entity {
             }
             attack();
             drawAttack(g2d);
-         //   drawAttackHitBox(g2d);
+            //   drawAttackHitBox(g2d);
         }
     }
 }

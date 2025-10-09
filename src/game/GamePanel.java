@@ -27,7 +27,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     MouseHandler mouseHandler = new MouseHandler(player);
 
-
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
@@ -44,7 +43,6 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread = new Thread(this);
         gameThread.start();
     }
-
 
     @Override
     public void run() {
@@ -68,6 +66,5 @@ public class GamePanel extends JPanel implements Runnable {
         EntityLoader.drawEntities(g2d);
         player.draw(g2d);
     }
-
 
 }

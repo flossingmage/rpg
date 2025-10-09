@@ -14,14 +14,16 @@ public class Enemy extends Entity {
     int animationTime = 30;
     int animationTick = 0;
 
-    
 
     public Enemy(int x, int y) {
         super(x, y);
     }
 
+    public Enemy(int x, int y, int length, int height) {
+        super(x, y, length, height);
+    }
+
     public void draw(Graphics2D g2d) {
-        g2d.drawRect(x * GamePanel.tileDimensions, y * GamePanel.tileDimensions, GamePanel.tileDimensions, GamePanel.tileDimensions);
         g2d.drawImage(getDrawnImg(), x * GamePanel.tileDimensions, y * GamePanel.tileDimensions, GamePanel.tileDimensions, GamePanel.tileDimensions, null);
     }
 
@@ -32,5 +34,6 @@ public class Enemy extends Entity {
     public void attacked() {
         isAttacked = true;
     }
-    
+
+
 }

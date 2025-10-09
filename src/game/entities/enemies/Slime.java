@@ -26,7 +26,7 @@ public class Slime extends Enemy {
     }
 
     public Slime(int x, int y) {
-        super(x, y);
+        super(x, y, 16,9);
     }
 
     @Override
