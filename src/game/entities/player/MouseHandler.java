@@ -14,10 +14,10 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        player.MouseClicked();
         int mouseX = e.getX();
         int mouseY = e.getY();
-        System.out.println(mouseX + " " + mouseY);
+        player.setDirection(mouseX,mouseY);
+        player.MouseClicked();
     }
 
     @Override

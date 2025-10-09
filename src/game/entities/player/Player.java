@@ -117,13 +117,16 @@ public class Player extends Entity {
         ArrayList<Entity> enemiesAttacked = new ArrayList<>();
         switch (direction) {
             case "up" -> {
-                enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions - attackThickness / 2, y - range - GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions, range);
-                enemiesAttacked.removeIf(entity -> entity.getHitbox().getY() + entity.getHitbox().getHeight() < y - range);
+                enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions - attackThickness / 2, y - range - GamePanel.tileDimensions, range + GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions);
+                enemiesAttacked.removeIf(entity -> (entity.getHitbox().getY() + entity.getHitbox().getHeight() < y - range || entity.getHitbox().getX() + entity.getHitbox().getLength() < (x + playerDimension / 2 - attackThickness / 2)));
             }
-            case "down" ->
-                    enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions - attackThickness / 2, y + playerDimension, attackThickness + GamePanel.tileDimensions, range);
+            case "down" -> {
+                enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions - attackThickness / 2, y + playerDimension, attackThickness + GamePanel.tileDimensions, range);
+                enemiesAttacked.removeIf(entity -> entity.getHitbox().getX() + entity.getHitbox().getLength() < (x + playerDimension / 2 - attackThickness / 2));
+            }
             case "left" -> {
-                enemiesAttacked = entitiesInArea(x - range - GamePanel.tileDimensions, y + playerDimension / 2 - GamePanel.tileDimensions, range + GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions);
+                enemiesAttacked = entitiesInArea(x - range - GamePanel.tileDimensions, y + playerDimension / 2 - GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions, range + GamePanel.tileDimensions);
+                System.out.println(enemiesAttacked.size());
                 enemiesAttacked.removeIf(entity -> entity.getHitbox().getX() + entity.getHitbox().getLength() < x - range);
             }
             case "right" ->
@@ -197,7 +200,7 @@ public class Player extends Entity {
             }
             attack();
             drawAttack(g2d);
-            //   drawAttackHitBox(g2d);
+            drawAttackHitBox(g2d);
         }
     }
 }

@@ -33,6 +33,7 @@ public class Enemy extends Entity {
 
     public void attacked() {
         isAttacked = true;
+        System.out.println("attacked");
     }
 
 

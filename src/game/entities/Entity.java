@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Entity {
     protected int x;
     protected int y;
-    protected int collisionBuffer = 6;
+    protected int collisionBuffer = 2;
 
     protected static BufferedImage ErrorImg;
 
