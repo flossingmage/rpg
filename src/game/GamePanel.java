@@ -16,11 +16,10 @@ public class GamePanel extends JPanel implements Runnable {
     public static int tileDimensions = 32;
     public static int rows = 20;
     public static int columns = 25;
+    public static Player player = new Player();
 
     int screenWidth = tileDimensions * columns;
     int screenHeight = tileDimensions * rows;
-
-    Player player = new Player();
     Thread gameThread;
 
     int FPSLimit = 60;
@@ -35,8 +34,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.addMouseMotionListener(mouseHandler);
         this.setDoubleBuffered(true);
         this.setFocusable(true);
-        MapLoader.loadMap("1");
-        EntityLoader.loadEntities("1");
     }
 
     public void startThreads() {
@@ -46,8 +43,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
+        MapLoader.loadMap("1");
+        EntityLoader.loadEntities("1");
         while (gameThread != null) {
-            player.playerMove();
+            player.entityMove();
             repaint();
             try {
                 //noinspection BusyWait

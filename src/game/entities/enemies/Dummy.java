@@ -1,5 +1,7 @@
 package game.entities.enemies;
 
+import game.GamePanel;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -21,7 +23,7 @@ public class Dummy extends Enemy {
     }
 
     public Dummy(int x, int y) {
-        super(x, y, 8,16);
+        super(x  * GamePanel.tileDimensions, y  * GamePanel.tileDimensions, 16,32,0);
     }
 
     @Override

@@ -14,6 +14,13 @@ import java.util.Scanner;
 public class MapLoader {
 
     static Tile grass;
+    static Tile water;
+    static Tile sand;
+    static Tile dirt_road;
+    static Tile tree;
+
+    static HashMap<String, Tile> map = new HashMap<>();
+    static ArrayList<String[]> exits = new ArrayList<>();
 
     static {
         try {
@@ -27,14 +34,6 @@ public class MapLoader {
         }
     }
 
-    static Tile water;
-    static Tile sand;
-    static Tile dirt_road;
-    static Tile tree;
-
-    static HashMap<String, Tile> map = new HashMap<>();
-    static ArrayList<String[]> exits = new ArrayList<>();
-
     public static void loadMap(String MapName) {
         map.clear();
         exits.clear();
@@ -43,10 +42,11 @@ public class MapLoader {
             Scanner scan = new Scanner(new File("res/level/levels/" + MapName + "/map"));
 
             int y = 0;
-            for (int loop = 0; loop < 20; loop++) {
+            for (int loop = 0; loop < GamePanel.rows; loop++) {
                 int x = 0;
                 String[] line = scan.nextLine().split(" ");
                 for (String tile : line) {
+                    //todo use enum to remove switch
                     switch (tile) {
                         case "0":
                             map.put(x + " " + y, grass);
@@ -85,7 +85,7 @@ public class MapLoader {
                     if (map.containsKey(x + " " + y))
                         g2d.drawImage(map.get(x + " " + y).img, x * GamePanel.tileDimensions, y * GamePanel.tileDimensions, GamePanel.tileDimensions, GamePanel.tileDimensions, null);
                 } catch (Exception e) {
-                    System.out.println("NullPointerException @MapLoader 86");
+                    System.out.println("NullPointerException @MapLoader drawMap");
                 }
         }
     }

@@ -1,5 +1,7 @@
 package game.entities.enemies;
 
+import game.GamePanel;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -26,7 +28,7 @@ public class Slime extends Enemy {
     }
 
     public Slime(int x, int y) {
-        super(x, y, 16,9);
+        super(x  * GamePanel.tileDimensions, y  * GamePanel.tileDimensions, 32,18,5);
     }
 
     @Override

@@ -3,7 +3,6 @@ package game.entities.player;
 import game.GamePanel;
 import game.entities.Entity;
 import game.entities.EntityLoader;
-import game.entities.enemies.Enemy;
 import game.level.MapLoader;
 
 import javax.imageio.ImageIO;
@@ -11,25 +10,17 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class Player extends Entity {
-
-    int vx, vy;
     int speed = 2;
     static int playerDimension = 30;
-    String direction = "right";
 
     boolean isAttacking = false;
 
     int tick = 0;
 
     BufferedImage playerIdl;
-
-    //temp stats will be stored in weapon object later
-    int range = 40;
-    int attackThickness = 10;
 
     public Player() {
         super(100, 100, playerDimension, playerDimension);
@@ -53,53 +44,6 @@ public class Player extends Entity {
         isAttacking = true;
     }
 
-    public void playerMove() {
-        int x;
-        int y;
-        String moveDirection;
-
-        // determine the tiles the player is on
-        int left = ((this.x + vx) - ((this.x + vx) % GamePanel.tileDimensions)) / GamePanel.tileDimensions;
-        int up = ((this.y + vy) - ((this.y + vy) % GamePanel.tileDimensions)) / GamePanel.tileDimensions;
-        int down = ((this.y + playerDimension + vy) - ((this.y + playerDimension + vy) % GamePanel.tileDimensions)) / GamePanel.tileDimensions;
-        int right = ((this.x + playerDimension + vx) - ((this.x + playerDimension + vx) % GamePanel.tileDimensions)) / GamePanel.tileDimensions;
-
-
-        if (vx < 0) {
-            x = left;
-        } else if (vx > 0) {
-            x = right;
-        } else {
-            x = (left + right) / 2;
-        }
-        if (vy < 0) {
-            y = up;
-        } else {
-            y = down;
-        }
-
-        if (!isAttacking) {
-            if (vy <= 0) {
-                moveDirection = "up";
-            } else {
-                moveDirection = "down";
-            }
-            if (entityCollision(moveDirection) && (MapLoader.getMap().containsKey(left + " " + y) && MapLoader.getMap().containsKey(right + " " + y)) && (MapLoader.getMap().get(left + " " + y).walkable) && (MapLoader.getMap().get(right + " " + y).walkable))
-                this.y += vy;
-
-            if (vx <= 0) {
-                moveDirection = "left";
-            } else {
-                moveDirection = "right";
-            }
-
-            if (entityCollision(moveDirection) && (MapLoader.getMap().containsKey(x + " " + up) && MapLoader.getMap().containsKey(x + " " + down)) && (MapLoader.getMap().get(x + " " + up).walkable) && (MapLoader.getMap().get(x + " " + down).walkable))
-                this.x += vx;
-        }
-
-        changeMap(x, y);
-    }
-
     public void changeMap(int x, int y) {
         for (String[] exit : MapLoader.getExits()) {
             if (Integer.parseInt(exit[0]) == x && Integer.parseInt(exit[1]) == y) {
@@ -108,34 +52,10 @@ public class Player extends Entity {
                 EntityLoader.loadEntities(exit[2]);
                 this.x = Integer.parseInt(exit[3]) * GamePanel.tileDimensions;
                 this.y = Integer.parseInt(exit[4]) * GamePanel.tileDimensions;
+                getHitbox().setX(Integer.parseInt(exit[3]) * GamePanel.tileDimensions);
+                getHitbox().setY(Integer.parseInt(exit[4]) * GamePanel.tileDimensions);
                 break;
             }
-        }
-    }
-
-    public void attack() {
-        ArrayList<Entity> enemiesAttacked = new ArrayList<>();
-        switch (direction) {
-            case "up" -> {
-                enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions - attackThickness / 2, y - range - GamePanel.tileDimensions, range + GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions);
-                enemiesAttacked.removeIf(entity -> (entity.getHitbox().getY() + entity.getHitbox().getHeight() < y - range || entity.getHitbox().getX() + entity.getHitbox().getLength() < (x + playerDimension / 2 - attackThickness / 2)));
-            }
-            case "down" -> {
-                enemiesAttacked = entitiesInArea(x + playerDimension / 2 - GamePanel.tileDimensions - attackThickness / 2, y + playerDimension, attackThickness + GamePanel.tileDimensions, range);
-                enemiesAttacked.removeIf(entity -> entity.getHitbox().getX() + entity.getHitbox().getLength() < (x + playerDimension / 2 - attackThickness / 2));
-            }
-            case "left" -> {
-                enemiesAttacked = entitiesInArea(x - range - GamePanel.tileDimensions, y + playerDimension / 2 - GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions, range + GamePanel.tileDimensions);
-                System.out.println(enemiesAttacked.size());
-                enemiesAttacked.removeIf(entity -> entity.getHitbox().getX() + entity.getHitbox().getLength() < x - range);
-            }
-            case "right" ->
-                    enemiesAttacked = entitiesInArea(x + playerDimension, y + playerDimension / 2 - GamePanel.tileDimensions, range, attackThickness + GamePanel.tileDimensions);
-
-        }
-
-        for (Entity entity : enemiesAttacked) {
-            if (entity instanceof Enemy) ((Enemy) entity).attacked();
         }
     }
 
@@ -202,5 +122,12 @@ public class Player extends Entity {
             drawAttack(g2d);
             drawAttackHitBox(g2d);
         }
+        getHitbox().drawHitBox(g2d);
+    }
+
+    // todo idk what I did but I need to make player run through the run method
+    @Override
+    public void run() {
+
     }
 }
