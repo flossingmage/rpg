@@ -20,33 +20,37 @@ public abstract class Enemy extends Entity {
     int speed = 1;
 
 
+    // constructor for when enemy size == tile size
     public Enemy(int x, int y, int agroRange) {
         super(x, y);
         this.agroRange = agroRange;
     }
 
+    // constructor for when enemy size != tile size
     public Enemy(int x, int y, int length, int height, int agroRange) {
         super(x, y, length, height);
         this.agroRange = agroRange;
     }
 
+    // todo make draw relative to hitbox location
     public void draw(Graphics2D g2d) {
         g2d.drawImage(getDrawnImg(), x, y, GamePanel.tileDimensions, GamePanel.tileDimensions, null);
-        g2d.drawRect(x,y,GamePanel.tileDimensions,GamePanel.tileDimensions);
+        g2d.drawRect(x, y, GamePanel.tileDimensions, GamePanel.tileDimensions);
     }
 
-    public BufferedImage getDrawnImg() {
-        return ErrorImg;
-    }
+    // todo move up to Entity
+    public abstract BufferedImage getDrawnImg();
 
+    // todo move up to Entity
     public void attacked() {
         isAttacked = true;
         System.out.println("attacked");
     }
 
+    // todo make method more generic and move up to Entity
     public void scanForPlayer() {
         Hitbox player = GamePanel.player.getHitbox();
-        if ((player.getX() < x + agroRange * GamePanel.tileDimensions && player.getX() > x - agroRange * GamePanel.tileDimensions) && (player.getY() < y + agroRange * GamePanel.tileDimensions && player.getY() > y - agroRange * GamePanel.tileDimensions)){
+        if ((player.getX() < x + agroRange * GamePanel.tileDimensions && player.getX() > x - agroRange * GamePanel.tileDimensions) && (player.getY() < y + agroRange * GamePanel.tileDimensions && player.getY() > y - agroRange * GamePanel.tileDimensions)) {
             target = GamePanel.player;
             System.out.println("found player");
         }
@@ -60,29 +64,29 @@ public abstract class Enemy extends Entity {
         }
     }
 
-    public void goToTarget(){
+    public void goToTarget() {
         setVelocity();
         entityMove();
 
     }
 
     public void setVelocity() {
-        if (target.getHitbox().getX() > getHitbox().getX()){
+        // set x velocity
+        if (target.getHitbox().getX() > getHitbox().getX()) {
             vx = speed;
-        }else if (target.getHitbox().getX() < getHitbox().getX()) {
+        } else if (target.getHitbox().getX() < getHitbox().getX()) {
             vx = -speed;
-        }else{
+        } else {
             vx = 0;
         }
 
-        if (target.getHitbox().getY() > getHitbox().getY()){
+        // set y velocity
+        if (target.getHitbox().getY() > getHitbox().getY()) {
             vy = speed;
-        }else if (target.getHitbox().getY() < getHitbox().getY()){
+        } else if (target.getHitbox().getY() < getHitbox().getY()) {
             vy = -speed;
-        }else{
+        } else {
             vy = 0;
         }
     }
-
-
 }

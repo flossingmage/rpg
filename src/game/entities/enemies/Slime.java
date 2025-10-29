@@ -28,11 +28,11 @@ public class Slime extends Enemy {
     }
 
     public Slime(int x, int y) {
-        super(x  * GamePanel.tileDimensions, y  * GamePanel.tileDimensions, 32,18,5);
+        super(x * GamePanel.tileDimensions, y * GamePanel.tileDimensions, 32, 18, 5);
     }
 
     @Override
-    public BufferedImage getDrawnImg(){
+    public BufferedImage getDrawnImg() {
         return idl;
     }
 }

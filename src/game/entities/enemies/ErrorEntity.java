@@ -9,19 +9,19 @@ public class ErrorEntity extends Enemy {
     static BufferedImage sprit;
 
     static {
-        try{
+        try {
             sprit = ImageIO.read(new File("res/enemies/error.png"));
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public ErrorEntity(int x, int y){
-        super(x,y,0);
+    public ErrorEntity(int x, int y) {
+        super(x, y, 0);
     }
 
     @Override
-    public BufferedImage getDrawnImg(){
+    public BufferedImage getDrawnImg() {
         return sprit;
     }
 }

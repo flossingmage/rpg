@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import static game.entities.EntityLoader.entityHitBoxes;
 
 public abstract class Entity {
+    // todo remove x, y
     protected int x, y, vx, vy;
     protected int collisionBuffer = 2;
     protected String direction;
@@ -24,25 +25,16 @@ public abstract class Entity {
     protected int range = 40;
     protected int attackThickness = 10;
 
-
-    protected static BufferedImage ErrorImg;
-
     Hitbox hitbox;
 
-    static {
-        try {
-            ErrorImg = ImageIO.read(new File("res/enemies/error.png"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
+    // for entities the size of the game tile
     public Entity(int x, int y) {
         this.x = x;
         this.y = y;
         hitbox = new Hitbox(x, y, GamePanel.tileDimensions, GamePanel.tileDimensions, this);
     }
 
+    // for entities that arn't the size of the game
     public Entity(int x, int y, int length, int height) {
         this.x = x;
         this.y = y;
@@ -55,7 +47,7 @@ public abstract class Entity {
 
     /**
      * check if entity can move in a given direction
-     *
+     * todo move to hitbox
      * @param direction the direction the entity is trying to move
      * @return true if the entity can move in the given direction, false otherwise
      */
@@ -97,6 +89,7 @@ public abstract class Entity {
         return true;
     }
 
+    // todo move to hitbox
     public void attack() {
         ArrayList<Entity> enemiesAttacked = new ArrayList<>();
         switch (direction) {
@@ -122,6 +115,7 @@ public abstract class Entity {
         }
     }
 
+    // todo move to hitbox
     public void entityMove() {
         int x;
         int y;
@@ -166,18 +160,20 @@ public abstract class Entity {
         }
     }
 
+    // todo move to hitbox
     public boolean canWalkOn(int x, int y) {
         String key = x + " " + y;
         return (MapLoader.getMap().containsKey(key) && MapLoader.getMap().get(key).walkable);
     }
 
+    // i don't know that this is
     public void setDirection() {
         direction = "left";
     }
 
     /**
      * Returns a list of all entities in a given area
-     *
+     * todo move to hitbox
      * @param x      top left x coordinate of area
      * @param y      top left y coordinate of area
      * @param height height of the area
@@ -195,6 +191,8 @@ public abstract class Entity {
         return entities;
     }
 
+
+    // todo move to hitbox
     public boolean checkbound(int check, int min, int max) {
         return ((check > min) && (check < max));
     }

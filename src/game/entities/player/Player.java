@@ -44,6 +44,7 @@ public class Player extends Entity {
         isAttacking = true;
     }
 
+    // todo make method only update hitbox after making Entities relative to hitbox
     public void changeMap(int x, int y) {
         for (String[] exit : MapLoader.getExits()) {
             if (Integer.parseInt(exit[0]) == x && Integer.parseInt(exit[1]) == y) {
@@ -83,6 +84,7 @@ public class Player extends Entity {
         }
     }
 
+    //todo make relive to hitbox and move up to entity
     public void drawAttackHitBox(Graphics2D g2d) {
         g2d.setColor(Color.blue);
         switch (direction) {
@@ -99,6 +101,7 @@ public class Player extends Entity {
 
     }
 
+    //todo make relive to hitbox and move up to entity
     public void drawAttack(Graphics2D g2d) {
         g2d.setColor(Color.red);
         switch (direction) {
