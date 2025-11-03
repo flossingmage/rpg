@@ -1,5 +1,7 @@
 package game.entities.enemies;
 
+import game.GamePanel;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,7 +19,7 @@ public class ErrorEntity extends Enemy {
     }
 
     public ErrorEntity(int x, int y) {
-        super(x, y, 0);
+        super(x * GamePanel.tileDimensions, y * GamePanel.tileDimensions, 0);
     }
 
     @Override

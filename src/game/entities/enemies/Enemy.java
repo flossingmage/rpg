@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 public abstract class Enemy extends Entity {
 
     boolean isAttacked;
-    boolean isAttacking;
 
     int animationTime = 30;
     int animationTick = 0;
@@ -32,10 +31,8 @@ public abstract class Enemy extends Entity {
         this.agroRange = agroRange;
     }
 
-    // todo make draw relative to hitbox location
     public void draw(Graphics2D g2d) {
-        g2d.drawImage(getDrawnImg(), x, y, GamePanel.tileDimensions, GamePanel.tileDimensions, null);
-        g2d.drawRect(x, y, GamePanel.tileDimensions, GamePanel.tileDimensions);
+        g2d.drawImage(getDrawnImg(), getHitbox().getX() - Math.abs((GamePanel.tileDimensions - getHitbox().getLength()) / 2), getHitbox().getY() - Math.abs(GamePanel.tileDimensions - getHitbox().getHeight()), GamePanel.tileDimensions, GamePanel.tileDimensions, null);
     }
 
     // todo move up to Entity
@@ -47,10 +44,10 @@ public abstract class Enemy extends Entity {
         System.out.println("attacked");
     }
 
-    // todo make method more generic and move up to Entity
+    // todo make method more generic and move up to Entity after creating allies for player
     public void scanForPlayer() {
         Hitbox player = GamePanel.player.getHitbox();
-        if ((player.getX() < x + agroRange * GamePanel.tileDimensions && player.getX() > x - agroRange * GamePanel.tileDimensions) && (player.getY() < y + agroRange * GamePanel.tileDimensions && player.getY() > y - agroRange * GamePanel.tileDimensions)) {
+        if ((player.getX() < getHitbox().getX() + agroRange * GamePanel.tileDimensions && player.getX() > getHitbox().getX() - agroRange * GamePanel.tileDimensions) && (player.getY() < getHitbox().getY() + agroRange * GamePanel.tileDimensions && player.getY() > getHitbox().getY() - agroRange * GamePanel.tileDimensions)) {
             target = GamePanel.player;
             System.out.println("found player");
         }
@@ -67,7 +64,6 @@ public abstract class Enemy extends Entity {
     public void goToTarget() {
         setVelocity();
         entityMove();
-
     }
 
     public void setVelocity() {

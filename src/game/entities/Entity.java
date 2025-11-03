@@ -16,8 +16,7 @@ import static game.entities.EntityLoader.entityHitBoxes;
 
 public abstract class Entity {
     // todo remove x, y
-    protected int x, y, vx, vy;
-    protected int collisionBuffer = 2;
+    protected int vx, vy;
     protected String direction;
     protected boolean isAttacking = false;
 
@@ -29,15 +28,11 @@ public abstract class Entity {
 
     // for entities the size of the game tile
     public Entity(int x, int y) {
-        this.x = x;
-        this.y = y;
         hitbox = new Hitbox(x, y, GamePanel.tileDimensions, GamePanel.tileDimensions, this);
     }
 
     // for entities that arn't the size of the game
     public Entity(int x, int y, int length, int height) {
-        this.x = x;
-        this.y = y;
         hitbox = new Hitbox(x, y, length, height, this);
     }
 
@@ -45,77 +40,10 @@ public abstract class Entity {
         return hitbox;
     }
 
-    /**
-     * check if entity can move in a given direction
-     * todo move to hitbox
-     * @param direction the direction the entity is trying to move
-     * @return true if the entity can move in the given direction, false otherwise
-     */
-    public boolean entityCollision(String direction) {
-        try {
-            switch (direction) {
-                case "up" -> {
-                    if (!entitiesInArea(hitbox.getX() - GamePanel.tileDimensions + collisionBuffer, hitbox.getY() - GamePanel.tileDimensions, GamePanel.tileDimensions, GamePanel.tileDimensions + hitbox.length - collisionBuffer - 2).isEmpty()) {
-                        Hitbox hitboxes = entitiesInArea(hitbox.getX() - GamePanel.tileDimensions + collisionBuffer, hitbox.getY() - GamePanel.tileDimensions, GamePanel.tileDimensions, GamePanel.tileDimensions + hitbox.length - collisionBuffer - 2).getFirst().getHitbox();
-                        if (hitbox.getY() < hitboxes.getY() + hitboxes.getHeight() && hitbox.getX() < hitboxes.getX() + hitboxes.getLength() - collisionBuffer)
-                            return false;
-                    }
-                }
-                case "down" -> {
-                    if (!entitiesInArea(hitbox.getX() - GamePanel.tileDimensions + collisionBuffer, hitbox.getY(), hitbox.getHeight(), GamePanel.tileDimensions + hitbox.length - collisionBuffer - 2).isEmpty()) {
-                        Hitbox hitboxes = entitiesInArea(hitbox.getX() - GamePanel.tileDimensions + collisionBuffer, hitbox.getY(), GamePanel.tileDimensions, GamePanel.tileDimensions + hitbox.length - collisionBuffer - 2).getFirst().getHitbox();
-                        if (hitbox.getY() < hitboxes.getY() + hitboxes.getHeight() && hitbox.getX() < hitboxes.getX() + hitboxes.getLength() - collisionBuffer)
-                            return false;
-                    }
-                }
-                case "left" -> {
-                    if (!entitiesInArea(hitbox.getX() - GamePanel.tileDimensions, hitbox.getY() - GamePanel.tileDimensions + collisionBuffer, GamePanel.tileDimensions + hitbox.height - collisionBuffer - 2, GamePanel.tileDimensions).isEmpty()) {
-                        Hitbox hitboxes = entitiesInArea(hitbox.getX() - GamePanel.tileDimensions, hitbox.getY() - GamePanel.tileDimensions + collisionBuffer, GamePanel.tileDimensions + hitbox.height - collisionBuffer - 2, GamePanel.tileDimensions).getFirst().getHitbox();
-                        if (hitbox.getX() < hitboxes.getX() + hitboxes.getLength() && hitbox.getY() < hitboxes.getY() + hitboxes.getHeight() - collisionBuffer)
-                            return false;
-                    }
-                }
-                case "right" -> {
-                    if (!entitiesInArea(hitbox.getX(), hitbox.getY() - GamePanel.tileDimensions + collisionBuffer, GamePanel.tileDimensions + hitbox.height - collisionBuffer - 2, hitbox.length + collisionBuffer).isEmpty()) {
-                        Hitbox hitboxes = entitiesInArea(hitbox.getX(), hitbox.getY() - GamePanel.tileDimensions + collisionBuffer, GamePanel.tileDimensions + hitbox.height - collisionBuffer - 2, hitbox.length).getFirst().getHitbox();
-                        if (hitbox.getX() < hitboxes.getX() + hitboxes.getLength() && hitbox.getY() < hitboxes.getY() + hitboxes.getHeight() - collisionBuffer)
-                            return false;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("update error Entity.java: 83");
-        }
-        return true;
+    public void setDirection() {
+        direction = "left";
     }
 
-    // todo move to hitbox
-    public void attack() {
-        ArrayList<Entity> enemiesAttacked = new ArrayList<>();
-        switch (direction) {
-            case "up" -> {
-                enemiesAttacked = entitiesInArea(x + hitbox.getLength() / 2 - GamePanel.tileDimensions - attackThickness / 2, y - range - GamePanel.tileDimensions, range + GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions);
-                enemiesAttacked.removeIf(entity -> (entity.getHitbox().getY() + entity.getHitbox().getHeight() < y - range || entity.getHitbox().getX() + entity.getHitbox().getLength() < (x + hitbox.getLength() / 2 - attackThickness / 2)));
-            }
-            case "down" -> {
-                enemiesAttacked = entitiesInArea(x + hitbox.getLength() / 2 - GamePanel.tileDimensions - attackThickness / 2 - 2, y + hitbox.getHeight(), attackThickness + GamePanel.tileDimensions, range);
-                enemiesAttacked.removeIf(entity -> entity.getHitbox().getX() + entity.getHitbox().getLength() < (x + hitbox.getLength() / 2 - attackThickness / 2));
-            }
-            case "left" -> {
-                enemiesAttacked = entitiesInArea(x - range - GamePanel.tileDimensions, y + hitbox.getHeight() / 2 - GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions, range + GamePanel.tileDimensions);
-                enemiesAttacked.removeIf(entity -> entity.getHitbox().getX() + entity.getHitbox().getLength() < x - range);
-            }
-            case "right" ->
-                    enemiesAttacked = entitiesInArea(x + hitbox.getLength() - 2, y + hitbox.getHeight() / 2 - GamePanel.tileDimensions, range, attackThickness + GamePanel.tileDimensions);
-
-        }
-
-        for (Entity entity : enemiesAttacked) {
-            if (entity instanceof Enemy) ((Enemy) entity).attacked();
-        }
-    }
-
-    // todo move to hitbox
     public void entityMove() {
         int x;
         int y;
@@ -137,8 +65,7 @@ public abstract class Entity {
             }
 
             int[] hitboxBounds = hitbox.getHitboxBounds();
-            if (entityCollision(moveDirection) && (canWalkOn(hitboxBounds[0], y) && canWalkOn(hitboxBounds[1], y))) {
-                this.y += vy;
+            if (CollisionHandler.entityCollision(moveDirection, getHitbox()) && (CollisionHandler.canWalkOn(hitboxBounds[0], y) && CollisionHandler.canWalkOn(hitboxBounds[1], y))) {
                 hitbox.y += vy;
             }
 
@@ -149,8 +76,7 @@ public abstract class Entity {
                 moveDirection = "right";
                 x = right;
             }
-            if (entityCollision(moveDirection) && (canWalkOn(x, hitboxBounds[2]) && canWalkOn(x, hitboxBounds[3]))) {
-                this.x += vx;
+            if (CollisionHandler.entityCollision(moveDirection, getHitbox()) && (CollisionHandler.canWalkOn(x, hitboxBounds[2]) && CollisionHandler.canWalkOn(x, hitboxBounds[3]))) {
                 hitbox.x += vx;
             }
 
@@ -160,41 +86,29 @@ public abstract class Entity {
         }
     }
 
-    // todo move to hitbox
-    public boolean canWalkOn(int x, int y) {
-        String key = x + " " + y;
-        return (MapLoader.getMap().containsKey(key) && MapLoader.getMap().get(key).walkable);
-    }
-
-    // i don't know that this is
-    public void setDirection() {
-        direction = "left";
-    }
-
-    /**
-     * Returns a list of all entities in a given area
-     * todo move to hitbox
-     * @param x      top left x coordinate of area
-     * @param y      top left y coordinate of area
-     * @param height height of the area
-     * @param length length of the area
-     * @return ArrayList<Entity>
-     */
-    public ArrayList<Entity> entitiesInArea(int x, int y, int height, int length) {
-        ArrayList<Entity> entities = new ArrayList<>();
-
-        for (Hitbox hitbox : entityHitBoxes) {
-            if (checkbound(hitbox.getX(), x, x + length) && checkbound(hitbox.getY(), y, y + height)) {
-                entities.add(hitbox.entity);
+    public void attack() {
+        ArrayList<Entity> enemiesAttacked = new ArrayList<>();
+        switch (direction) {
+            case "up" -> {
+                enemiesAttacked = CollisionHandler.entitiesInArea(hitbox.getX() + hitbox.getLength() / 2 - GamePanel.tileDimensions - attackThickness / 2, hitbox.getY() - range - GamePanel.tileDimensions, range + GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions);
+                enemiesAttacked.removeIf(entity -> (entity.getHitbox().getY() + entity.getHitbox().getHeight() < hitbox.getY() - range || entity.getHitbox().getX() + entity.getHitbox().getLength() < (hitbox.getX()  + hitbox.getLength() / 2 - attackThickness / 2)));
             }
+            case "down" -> {
+                enemiesAttacked = CollisionHandler.entitiesInArea(hitbox.getX()  + hitbox.getLength() / 2 - GamePanel.tileDimensions - attackThickness / 2 - 2, hitbox.getY() + hitbox.getHeight(), attackThickness + GamePanel.tileDimensions, range);
+                enemiesAttacked.removeIf(entity -> entity.getHitbox().getX() + entity.getHitbox().getLength() < (hitbox.getX()  + hitbox.getLength() / 2 - attackThickness / 2));
+            }
+            case "left" -> {
+                enemiesAttacked = CollisionHandler.entitiesInArea(hitbox.getX()  - range - GamePanel.tileDimensions, hitbox.getY() + hitbox.getHeight() / 2 - GamePanel.tileDimensions, attackThickness + GamePanel.tileDimensions, range + GamePanel.tileDimensions);
+                enemiesAttacked.removeIf(entity -> entity.getHitbox().getX() + entity.getHitbox().getLength() < hitbox.getX()  - range);
+            }
+            case "right" ->
+                    enemiesAttacked = CollisionHandler.entitiesInArea(hitbox.getX()  + hitbox.getLength() - 2, hitbox.getY() + hitbox.getHeight() / 2 - GamePanel.tileDimensions, range, attackThickness + GamePanel.tileDimensions);
+
         }
-        return entities;
-    }
 
-
-    // todo move to hitbox
-    public boolean checkbound(int check, int min, int max) {
-        return ((check > min) && (check < max));
+        for (Entity entity : enemiesAttacked) {
+            if (entity instanceof Enemy) ((Enemy) entity).attacked();
+        }
     }
 
     public abstract void draw(Graphics2D g2d);
