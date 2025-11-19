@@ -1,11 +1,13 @@
 package game.entities;
 
+import game.GamePanel;
 import game.entities.enemies.Dummy;
 import game.entities.enemies.ErrorEntity;
 import game.entities.enemies.Slime;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -14,9 +16,15 @@ public class EntityLoader {
 
     public static void loadEntities(String fileName) {
         entityHitBoxes.clear();
+        Scanner scanner;
+
         try {
-            Scanner scanner = new Scanner(new File("res/level/levels/" + fileName + "/entities"));
-            while (scanner.hasNextLine()) {
+            scanner = new Scanner(new File("res/level/levels/" + fileName + "/entities"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        while (scanner.hasNextLine()) {
                 String[] line = scanner.nextLine().split(" ");
                 Entity entity;
                 switch (line[0]) {
@@ -26,17 +34,21 @@ public class EntityLoader {
                 }
                 entityHitBoxes.add(entity.hitbox);
             }
+            entityHitBoxes.add(GamePanel.player.getHitbox());
             scanner.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    }
+
+
+    // make for loop safe;
+    public static void drawEntities(Graphics2D g2d) {
+        for (Hitbox hitbox : entityHitBoxes) {
+                hitbox.entity.draw(g2d);
+                hitbox.drawHitBox(g2d);
         }
     }
 
-    public static void drawEntities(Graphics2D g2d) {
-        for (Hitbox hitbox : entityHitBoxes) {
-            hitbox.drawHitBox(g2d);
-            hitbox.entity.draw(g2d);
-            hitbox.entity.run();
-        }
+    public static void entitiesRun() {
+            for (Hitbox hitbox : new ArrayList<>(entityHitBoxes))
+                hitbox.entity.run();
     }
 }

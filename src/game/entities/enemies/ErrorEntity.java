@@ -1,6 +1,7 @@
 package game.entities.enemies;
 
 import game.GamePanel;
+import game.entities.Entity;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -25,5 +26,11 @@ public class ErrorEntity extends Enemy {
     @Override
     public BufferedImage getDrawnImg() {
         return sprit;
+    }
+
+
+    @Override
+    public void attacked(Entity attacker){
+        isAttacked = true;
     }
 }

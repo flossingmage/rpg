@@ -17,6 +17,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static int rows = 20;
     public static int columns = 25;
     public static Player player = new Player();
+    public static boolean isPaused = false;
 
     int screenWidth = tileDimensions * columns;
     int screenHeight = tileDimensions * rows;
@@ -46,7 +47,9 @@ public class GamePanel extends JPanel implements Runnable {
         MapLoader.loadMap("1");
         EntityLoader.loadEntities("1");
         while (gameThread != null) {
-            player.entityMove();
+            if (!isPaused)
+                EntityLoader.entitiesRun();
+            // open menu on pause
             repaint();
             try {
                 //noinspection BusyWait
@@ -60,10 +63,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-
         MapLoader.drawMap(g2d);
         EntityLoader.drawEntities(g2d);
-        player.draw(g2d);
     }
-
 }

@@ -20,9 +20,13 @@ public abstract class Entity {
     protected String direction;
     protected boolean isAttacking = false;
 
+    protected int health = 100;
+
     //temp stats will be stored in weapon object later
     protected int range = 40;
     protected int attackThickness = 10;
+    protected int knockBack = 30;
+    protected int damage = 50;
 
     Hitbox hitbox;
 
@@ -86,7 +90,7 @@ public abstract class Entity {
         }
     }
 
-    public void attack() {
+    public void attack(Entity attacker) {
         ArrayList<Entity> enemiesAttacked = new ArrayList<>();
         switch (direction) {
             case "up" -> {
@@ -94,7 +98,7 @@ public abstract class Entity {
                 enemiesAttacked.removeIf(entity -> (entity.getHitbox().getY() + entity.getHitbox().getHeight() < hitbox.getY() - range || entity.getHitbox().getX() + entity.getHitbox().getLength() < (hitbox.getX()  + hitbox.getLength() / 2 - attackThickness / 2)));
             }
             case "down" -> {
-                enemiesAttacked = CollisionHandler.entitiesInArea(hitbox.getX()  + hitbox.getLength() / 2 - GamePanel.tileDimensions - attackThickness / 2 - 2, hitbox.getY() + hitbox.getHeight(), attackThickness + GamePanel.tileDimensions, range);
+                enemiesAttacked = CollisionHandler.entitiesInArea(hitbox.getX()  + hitbox.getLength() / 2 - GamePanel.tileDimensions - attackThickness / 2 - 2, hitbox.getY() + hitbox.getHeight() - 4, attackThickness + GamePanel.tileDimensions + 4, range);
                 enemiesAttacked.removeIf(entity -> entity.getHitbox().getX() + entity.getHitbox().getLength() < (hitbox.getX()  + hitbox.getLength() / 2 - attackThickness / 2));
             }
             case "left" -> {
@@ -107,11 +111,23 @@ public abstract class Entity {
         }
 
         for (Entity entity : enemiesAttacked) {
-            if (entity instanceof Enemy) ((Enemy) entity).attacked();
+            if (entity instanceof Enemy) ((Enemy) entity).attacked(attacker);
         }
     }
 
     public abstract void draw(Graphics2D g2d);
 
     public abstract void run();
+
+    public int getKnockBack() {
+        return knockBack;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
 }

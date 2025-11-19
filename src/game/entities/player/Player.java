@@ -15,18 +15,21 @@ import java.io.IOException;
 public class Player extends Entity {
     int speed = 2;
     static int playerDimension = 30;
-
     int tick = 0;
 
-    BufferedImage playerIdl;
+    static BufferedImage playerIdl;
 
-    public Player() {
-        super(100, 100, playerDimension, playerDimension);
+
+    static {
         try {
-            playerIdl = ImageIO.read(new File("res/player/playerIdl.png"));
+            playerIdl = ImageIO.read(new File("res/player/humanBasic.png"));
         } catch (IOException e) {
             System.out.println("Can't load player imgs");
         }
+    }
+
+    public Player() {
+        super(100, 100, playerDimension, playerDimension);
     }
 
     public void setVelocity(boolean up, boolean down, boolean left, boolean right) {
@@ -42,7 +45,6 @@ public class Player extends Entity {
         isAttacking = true;
     }
 
-    // todo make method only update hitbox after making Entities relative to hitbox
     public void changeMap(int x, int y) {
         for (String[] exit : MapLoader.getExits()) {
             if (Integer.parseInt(exit[0]) == x && Integer.parseInt(exit[1]) == y) {
@@ -109,6 +111,27 @@ public class Player extends Entity {
         }
     }
 
+
+//    // Flip the image vertically
+//    AffineTransform tx = AffineTransform.getScaleInstance(1, -1);
+//tx.translate(0, -image.getHeight(null));
+//    AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+//    image = op.filter(image, null);
+//
+//
+//// Flip the image horizontally
+//    tx = AffineTransform.getScaleInstance(-1, 1);
+//tx.translate(-image.getWidth(null), 0);
+//    op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+//    image = op.filter(image, null);
+//
+//// Flip the image vertically and horizontally; equivalent to rotating the image 180 degrees
+//    tx = AffineTransform.getScaleInstance(-1, -1);
+//tx.translate(-image.getWidth(null), -image.getHeight(null));
+//    op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+//    image = op.filter(image, null);
+
+
     public void draw(Graphics2D g2d) {
         g2d.drawImage(playerIdl, getHitbox().getX() + ((Math.abs(playerDimension - GamePanel.tileDimensions)) / 2), getHitbox().getY() + (Math.abs(playerDimension - GamePanel.tileDimensions) / 2), playerDimension, playerDimension, null);
         if (isAttacking) {
@@ -117,16 +140,14 @@ public class Player extends Entity {
                 isAttacking = false;
                 tick = 0;
             }
-            attack();
             drawAttack(g2d);
-            //drawAttackHitBox(g2d);
         }
-        getHitbox().drawHitBox(g2d);
     }
 
-    // todo idk what I did but I need to make player run through the run method
     @Override
     public void run() {
-
+        entityMove();
+        if (isAttacking)
+            attack(this);
     }
 }

@@ -1,5 +1,7 @@
 package game.entities.player;
 
+import game.GamePanel;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -23,6 +25,7 @@ public class KeyHandler implements KeyListener {
         if (key == KeyEvent.VK_S) down = true;
         if (key == KeyEvent.VK_D) right = true;
         if (key == KeyEvent.VK_A) left = true;
+        if (key == KeyEvent.VK_ESCAPE) GamePanel.isPaused = !GamePanel.isPaused;
         player.setVelocity(up, down, left, right);
     }
 

@@ -1,6 +1,7 @@
 package game.entities.enemies;
 
 import game.GamePanel;
+import game.entities.Entity;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -42,5 +43,10 @@ public class Dummy extends Enemy {
             }
         }
         return idl;
+    }
+
+    @Override
+    public void attacked(Entity attacker){
+        isAttacked = true;
     }
 }

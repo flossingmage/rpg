@@ -2,6 +2,7 @@ package game.entities.enemies;
 
 import game.GamePanel;
 import game.entities.Entity;
+import game.entities.EntityLoader;
 import game.entities.Hitbox;
 
 import java.awt.*;
@@ -39,9 +40,29 @@ public abstract class Enemy extends Entity {
     public abstract BufferedImage getDrawnImg();
 
     // todo move up to Entity
-    public void attacked() {
+    public void attacked(Entity attacker) {
+        switch (attacker.getDirection()){
+            case "up" -> getHitbox().setY(getHitbox().getY() - attacker.getKnockBack());
+            case "down" -> getHitbox().setY(getHitbox().getY() + attacker.getKnockBack());
+            case "left" -> getHitbox().setX(getHitbox().getX() - attacker.getKnockBack());
+            case "right" -> getHitbox().setX(getHitbox().getX() + attacker.getKnockBack());
+        }
+
+        health -= attacker.getDamage();
+
+        if(isDead())
+            kill();
+
         isAttacked = true;
         System.out.println("attacked");
+    }
+
+    public boolean isDead(){
+        return health <= 0;
+    }
+
+    public void kill(){
+        EntityLoader.entityHitBoxes.remove(getHitbox());
     }
 
     // todo make method more generic and move up to Entity after creating allies for player
